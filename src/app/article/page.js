@@ -9,7 +9,7 @@ export default function Page({ params }) {
   const pathname = usePathname()
 
   const [article, setArticle] = useState(null)
-  const searchParams = useSearchParams();  
+  const searchParams = useSearchParams();
   const title = searchParams.get("title");
   const content = searchParams.get("content");
   const urlToImg = searchParams.get("urlToImg");
@@ -19,62 +19,58 @@ export default function Page({ params }) {
 
 
   useEffect(() => {
-
-    
     axios
       .get(`/api/single-article?url=${encodeURIComponent(title)}`, { cache: "no-store" })
       .then((res) => {
         console.log(res.data.articles[0]);
         setArticle(res.data.articles[0])
-
-
       })
       .catch((error) => console.error(error));
   }, [title]);
 
   return (
-        <Suspense fallback={<div>Loading...</div>}>
+     <Suspense fallback={<div className="text-center py-8">Loading article...</div>}>
 
-    <InterfaceLayout>
-      {
-        article ? (
-          <div className='w-full flex flex-col  items-center border-t'>
-            
-          <div className='max-w-4xl flex flex-col gap-4 mt-8'>
+      <InterfaceLayout>
+        {
+          article ? (
+            <div className='w-full flex flex-col  items-center border-t'>
 
-            <h1 className='text-black text-7xl text-center'>{title}</h1>
-        
-            <div className='flex flex-col  gap-4'>
+              <div className='max-w-4xl flex flex-col gap-4 mt-8'>
+
+                <h1 className='text-black text-7xl text-center'>{title}</h1>
+
+                <div className='flex flex-col  gap-4'>
                   <div className="w-full h-100 shrink-0 relative">
-                                          <Image
-                                              src={urlToImg || "/missing.jpg"}
-                                              alt={article.title}
-                                              fill
-                                              className="rounded-2xl object-cover"
-                                          />
-                                      </div>
-                                          <div className="flex justify-between p-5 text-sm">
-              <div className='flex items-center gap-2'>
-                <p className="text-zinc-600 uppercase text-lg">{author || "Joe Doe"}</p> |
-                <p className="text-zinc-600">{source || "Joe Doe"}</p>
-              </div>
-              <div className="flex  gap-3">
-                <p className="text-zinc-600 text-md">{date}</p>
+                    <Image
+                      src={urlToImg || "/missing.jpg"}
+                      alt={article.title}
+                      fill
+                      className="rounded-2xl object-cover"
+                    />
+                  </div>
+                  <div className="flex justify-between p-5 text-sm">
+                    <div className='flex items-center gap-2'>
+                      <p className="text-zinc-600 uppercase text-lg">{author || "Joe Doe"}</p> |
+                      <p className="text-zinc-600">{source || "Joe Doe"}</p>
+                    </div>
+                    <div className="flex  gap-3">
+                      <p className="text-zinc-600 text-md">{date}</p>
+                    </div>
+                  </div>
+
+                  <p className='text-black text-md'>{content}</p>
+                </div>
               </div>
             </div>
 
-              <p className='text-black text-md'>{content}</p>
-            </div>
-          </div>
-          </div>
-
-        ) :
-          (
-            <div>Loading Data</div>
-          )
-      }
-    </InterfaceLayout>
-        </Suspense>
+          ) :
+            (
+              <div>Loading Data</div>
+            )
+        }
+      </InterfaceLayout>
+    </Suspense>
 
   );
 }
