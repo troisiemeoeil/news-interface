@@ -3,7 +3,7 @@ import InterfaceLayout from '@/components/interface-layout';
 import axios from 'axios';
 import Image from 'next/image';
 import { usePathname, useSearchParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 
 export default function Page({ params }) {
   const pathname = usePathname()
@@ -33,6 +33,8 @@ export default function Page({ params }) {
   }, [title]);
 
   return (
+        <Suspense fallback={<div>Loading...</div>}>
+
     <InterfaceLayout>
       {
         article ? (
@@ -72,5 +74,7 @@ export default function Page({ params }) {
           )
       }
     </InterfaceLayout>
+        </Suspense>
+
   );
 }
